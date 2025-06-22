@@ -73,25 +73,52 @@ Connect with Claude Desktop to unlock AI superpowers:
 - 📊 **Provide detailed feedback** on your drawings
 - 🎨 **Discuss artistic concepts** and inspiration
 
-### Quick Setup for Claude Desktop:
+### Quick Setup for AI Code Editors:
 
-1. **Make sure Draw-it-MCP is running** (using `npx draw-it-mcp`)
-
-2. **Add to your Claude Desktop config** at `~/Library/Application Support/Claude/claude_desktop_config.json`:
+#### 🤖 Claude Code (Recommended)
+1. **Install Claude Code**: [Download from Anthropic](https://claude.ai/code)
+2. **Start Draw-it-MCP**: `npx draw-it-mcp` 
+3. **Add MCP configuration** to your Claude Code settings:
    ```json
    {
      "mcpServers": {
        "draw-it-mcp": {
-         "command": "npm",
-         "args": ["exec", "draw-it-mcp", "mcp:server"]
+         "command": "npx",
+         "args": ["draw-it-mcp", "mcp:server"]
        }
      }
    }
    ```
+4. **Restart Claude Code** and try: *"Can you analyze my current drawing?"*
 
-3. **Restart Claude Desktop**
+#### ⚡ Cursor IDE  
+1. **Install Cursor**: [Download from cursor.sh](https://cursor.sh/)
+2. **Start Draw-it-MCP**: `npx draw-it-mcp`
+3. **Configure MCP** in Cursor settings (`~/.cursor/claude_desktop_config.json`):
+   ```json
+   {
+     "mcpServers": {
+       "draw-it-mcp": {
+         "command": "npx", 
+         "args": ["draw-it-mcp", "mcp:server"]
+       }
+     }
+   }
+   ```
+4. **Restart Cursor** and ask Claude about your drawings!
 
-4. **Try asking Claude**: "Can you analyze my current drawing?"
+#### 🖥️ Claude Desktop (Alternative)
+For Claude Desktop users, add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "draw-it-mcp": {
+      "command": "npx",
+      "args": ["draw-it-mcp", "mcp:server"] 
+    }
+  }
+}
+```
 
 ## 📱 How to Use
 

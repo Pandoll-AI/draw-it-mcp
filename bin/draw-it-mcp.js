@@ -84,11 +84,11 @@ async function main() {
     const port = await findAvailablePort(3001);
     console.log(`🌟 Found available port: ${port}`);
     
-    // Build if needed
+    // Always build on first run or if build doesn't exist
     const buildDir = path.join(projectRoot, '.next');
-    if (!fs.existsSync(buildDir)) {
-      console.log('🏗️  Building application...');
-      const buildProcess = spawn('npm', ['run', 'build'], {
+    if (!fs.existsSync(buildDir) || isFirstRun()) {
+      console.log('🏗️  Building application for the first time...');
+      const buildProcess = spawn('npx', ['next', 'build'], {
         cwd: projectRoot,
         stdio: 'inherit',
         shell: true
@@ -97,6 +97,7 @@ async function main() {
       await new Promise((resolve, reject) => {
         buildProcess.on('close', (code) => {
           if (code === 0) {
+            console.log('✅ Build completed successfully!');
             resolve();
           } else {
             reject(new Error(`Build failed with code ${code}`));
@@ -174,6 +175,8 @@ async function main() {
     console.log('  • Make sure Node.js 18+ is installed');
     console.log('  • Check if port 3001 is available');
     console.log('  • Try running: npm install');
+    console.log('  • If build fails, try: npx create-next-app@latest --typescript');
+    console.log('  • For MCP setup: https://github.com/Pandoll-AI/draw-it-mcp#ai-powered-art-analysis-optional');
     process.exit(1);
   }
 }
