@@ -1,6 +1,6 @@
 {
   "name": "draw-it-mcp",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "🎨 A beautiful drawing app with Cursor & Claude Code MCP integration. Draw, save, and let AI analyze your artwork!",
   "main": "bin/draw-it-mcp.js",
   "type": "module",
@@ -10,7 +10,6 @@
   "files": [
     "bin/",
     "src/",
-    "public/",
     "next.config.js",
     "tailwind.config.js", 
     "postcss.config.js",
