@@ -1,0 +1,79 @@
+{
+  "name": "draw-it-mcp",
+  "version": "1.0.0",
+  "description": "🎨 A beautiful drawing app with Claude Desktop MCP integration. Draw, save, and let AI analyze your artwork!",
+  "main": "bin/draw-it-mcp.js",
+  "type": "module",
+  "bin": {
+    "draw-it-mcp": "./bin/draw-it-mcp.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "public/",
+    "next.config.js",
+    "tailwind.config.js",
+    "postcss.config.js",
+    "tsconfig.json"
+  ],
+  "keywords": [
+    "drawing",
+    "canvas",
+    "mcp",
+    "claude",
+    "ai",
+    "artwork",
+    "creative",
+    "digital-art",
+    "web-app",
+    "nextjs"
+  ],
+  "author": {
+    "name": "Draw-it-MCP",
+    "email": "hello@draw-it-mcp.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/draw-it-mcp/draw-it-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/draw-it-mcp/draw-it-mcp/issues"
+  },
+  "homepage": "https://github.com/draw-it-mcp/draw-it-mcp#readme",
+  "scripts": {
+    "start": "node bin/draw-it-mcp.js",
+    "dev": "next dev -H 0.0.0.0 -p 3001",
+    "build": "next build",
+    "mcp:server": "node src/mcp/drawing-mcp-server.js",
+    "postinstall": "echo '🎨 Draw-it-MCP installed! Run: npx draw-it-mcp'"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.0",
+    "nanoid": "^5.0.0",
+    "next": "^14.0.0",
+    "open": "^10.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sharp": "^0.34.2",
+    "tailwindcss": "^3.3.0",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/ws": "^8.18.1",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.50.0",
+    "eslint-config-next": "^14.0.0",
+    "postcss": "^8.4.0",
+    "prettier": "^3.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

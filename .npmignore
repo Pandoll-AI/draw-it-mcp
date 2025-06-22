@@ -1,0 +1,56 @@
+# Development files
+.next/
+node_modules/
+.env*
+.DS_Store
+*.log
+logs/
+.vercel/
+.claude/
+
+# Development tools
+.eslintrc*
+.prettierrc*
+jest.config.*
+*.test.*
+*.spec.*
+coverage/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build artifacts
+dist/
+build/
+out/
+
+# Git
+.git/
+.gitignore
+
+# Documentation (keep README.md)
+docs/
+CONTRIBUTING.md
+CHANGELOG.md
+
+# Development dependencies
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# OS files
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# First run flag (regenerate for each install)
+.first-run

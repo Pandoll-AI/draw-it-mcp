@@ -1,0 +1,182 @@
+#!/usr/bin/env node
+
+import { spawn } from 'child_process';
+import { createServer } from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..');
+
+// ASCII Art Banner
+const banner = `
+╭─────────────────────────────────────────────────────────────╮
+│  🎨 Draw-it-MCP - AI-Powered Drawing Application            │
+│                                                             │
+│  ✨ Features:                                               │
+│  • Beautiful canvas drawing interface                      │
+│  • Save & load your artwork                               │
+│  • Claude Desktop MCP integration                         │
+│  • Dark/Light theme support                               │
+│                                                             │
+╰─────────────────────────────────────────────────────────────╯
+`;
+
+console.log('\x1b[36m%s\x1b[0m', banner);
+
+// Find available port
+async function findAvailablePort(startPort = 3001) {
+  return new Promise((resolve) => {
+    const server = createServer();
+    server.listen(startPort, () => {
+      const port = server.address().port;
+      server.close(() => {
+        resolve(port);
+      });
+    });
+    server.on('error', () => {
+      resolve(findAvailablePort(startPort + 1));
+    });
+  });
+}
+
+// Check if this is first run
+function isFirstRun() {
+  const flagFile = path.join(projectRoot, '.first-run');
+  if (!fs.existsSync(flagFile)) {
+    fs.writeFileSync(flagFile, Date.now().toString());
+    return true;
+  }
+  return false;
+}
+
+// Main function
+async function main() {
+  try {
+    console.log('🚀 Starting Draw-it-MCP...\n');
+    
+    // Check if we're in development or installed via npm
+    const isDev = fs.existsSync(path.join(projectRoot, 'package-lock.json'));
+    const nodeModulesExists = fs.existsSync(path.join(projectRoot, 'node_modules'));
+    
+    if (!nodeModulesExists) {
+      console.log('📦 Installing dependencies... This may take a moment.');
+      const npmInstall = spawn('npm', ['install'], {
+        cwd: projectRoot,
+        stdio: 'inherit',
+        shell: true
+      });
+      
+      await new Promise((resolve, reject) => {
+        npmInstall.on('close', (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject(new Error(`npm install failed with code ${code}`));
+          }
+        });
+      });
+    }
+
+    // Find available port
+    const port = await findAvailablePort(3001);
+    console.log(`🌟 Found available port: ${port}`);
+    
+    // Build if needed
+    const buildDir = path.join(projectRoot, '.next');
+    if (!fs.existsSync(buildDir)) {
+      console.log('🏗️  Building application...');
+      const buildProcess = spawn('npm', ['run', 'build'], {
+        cwd: projectRoot,
+        stdio: 'inherit',
+        shell: true
+      });
+      
+      await new Promise((resolve, reject) => {
+        buildProcess.on('close', (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject(new Error(`Build failed with code ${code}`));
+          }
+        });
+      });
+    }
+
+    // Start the application
+    console.log('🎨 Launching Draw-it-MCP...\n');
+    
+    const serverProcess = spawn('npx', ['next', 'start', '-p', port.toString()], {
+      cwd: projectRoot,
+      stdio: 'inherit',
+      shell: true,
+      env: { ...process.env, PORT: port.toString() }
+    });
+
+    // Show success message
+    setTimeout(() => {
+      console.log('\n' + '='.repeat(60));
+      console.log('🎉 Draw-it-MCP is running!');
+      console.log(`🌐 Open: \x1b[32mhttp://localhost:${port}\x1b[0m`);
+      console.log('');
+      console.log('💡 Quick Tips:');
+      console.log('  • Click colors to change brush color');
+      console.log('  • Use different brush sizes for varied strokes');
+      console.log('  • Save your drawings for later');
+      console.log('  • Toggle dark/light theme');
+      console.log('');
+      console.log('🤖 Claude Desktop Integration:');
+      console.log('  • MCP server available for AI analysis');
+      console.log('  • Check README for setup instructions');
+      console.log('');
+      console.log('⏹️  Press Ctrl+C to stop');
+      console.log('='.repeat(60) + '\n');
+      
+      // Open browser if first run
+      if (isFirstRun()) {
+        setTimeout(async () => {
+          try {
+            const open = await import('open');
+            await open.default(`http://localhost:${port}`);
+            console.log('🌐 Browser opened automatically!');
+          } catch (error) {
+            console.log('💡 Please open your browser and navigate to the URL above');
+          }
+        }, 2000);
+      }
+    }, 2000);
+
+    // Handle graceful shutdown
+    process.on('SIGINT', () => {
+      console.log('\n🛑 Shutting down Draw-it-MCP...');
+      serverProcess.kill('SIGINT');
+      setTimeout(() => {
+        console.log('👋 Thanks for using Draw-it-MCP!');
+        process.exit(0);
+      }, 1000);
+    });
+
+    // Handle server process exit
+    serverProcess.on('close', (code) => {
+      if (code !== 0) {
+        console.error(`\n❌ Server process exited with code ${code}`);
+        console.log('💡 Try running again or check for port conflicts');
+      }
+      process.exit(code);
+    });
+
+  } catch (error) {
+    console.error('\n❌ Error starting Draw-it-MCP:');
+    console.error(error.message);
+    console.log('\n💡 Troubleshooting:');
+    console.log('  • Make sure Node.js 18+ is installed');
+    console.log('  • Check if port 3001 is available');
+    console.log('  • Try running: npm install');
+    process.exit(1);
+  }
+}
+
+// Run the application
+main().catch(console.error);
