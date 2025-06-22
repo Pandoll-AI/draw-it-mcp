@@ -1,11 +1,11 @@
 {
   "name": "draw-it-mcp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "🎨 A beautiful drawing app with Claude Desktop MCP integration. Draw, save, and let AI analyze your artwork!",
   "main": "bin/draw-it-mcp.js",
   "type": "module",
   "bin": {
-    "draw-it-mcp": "./bin/draw-it-mcp.js"
+    "draw-it-mcp": "bin/draw-it-mcp.js"
   },
   "files": [
     "bin/",
@@ -35,7 +35,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/draw-it-mcp/draw-it-mcp.git"
+    "url": "git+https://github.com/draw-it-mcp/draw-it-mcp.git"
   },
   "bugs": {
     "url": "https://github.com/draw-it-mcp/draw-it-mcp/issues"
