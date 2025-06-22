@@ -697,13 +697,42 @@ export function DrawingApp() {
     img.src = drawing.data;
   }, [saveCanvasState]);
 
-  const deleteDrawing = useCallback((id: string) => {
+  const deleteDrawing = useCallback(async (id: string) => {
+    try {
+      // Find the drawing to get its filename
+      const drawingToDelete = savedDrawings.find(d => d.id === id);
+      if (!drawingToDelete) {
+        console.warn('Drawing not found:', id);
+        return;
+      }
+
+      // Extract filename from id (format: canvas_XXXX)
+      const filename = `${id}.png`;
+      
+      // Call API to delete the actual file
+      const response = await fetch(`/api/drawing?filename=${encodeURIComponent(filename)}`, {
+        method: 'DELETE'
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Failed to delete file:', errorData.error);
+        // Continue with local deletion even if file deletion fails
+      } else {
+        console.log('File deleted successfully:', filename);
+      }
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      // Continue with local deletion even if API call fails
+    }
+
     // 삭제하려는 그림이 현재 편집 중인 그림이라면 편집 상태 초기화
     if (currentEditingDrawing && currentEditingDrawing.id === id) {
       setCurrentEditingDrawing(null);
       setHasUnsavedChanges(false);
     }
     
+    // Remove from local storage
     const newDrawings = savedDrawings.filter(d => d.id !== id);
     setSavedDrawings(newDrawings);
     localStorage.setItem('simpleDrawings', JSON.stringify(newDrawings));

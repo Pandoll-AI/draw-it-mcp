@@ -62,6 +62,53 @@ function dataURLToPNG(dataURL: string): Buffer {
   return Buffer.from(base64Data, 'base64');
 }
 
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const filename = searchParams.get('filename');
+    
+    if (!filename) {
+      logger.error('[API] No filename provided for deletion');
+      return NextResponse.json({ success: false, error: 'Filename required' }, { status: 400 });
+    }
+    
+    logger.debug('[API] DELETE request for file:', filename);
+    processLogger.info('API', `Deleting ${filename}`);
+    
+    await ensureDrawingsDir();
+    
+    const filePath = path.join(DRAWINGS_DIR, filename);
+    
+    // Check if file exists
+    if (!existsSync(filePath)) {
+      logger.warn('[API] File not found for deletion:', filename);
+      return NextResponse.json({ success: false, error: 'File not found' }, { status: 404 });
+    }
+    
+    // Don't allow deletion of current-active.png
+    if (filename === 'current-active.png') {
+      logger.warn('[API] Attempted to delete current-active.png');
+      return NextResponse.json({ success: false, error: 'Cannot delete active drawing' }, { status: 403 });
+    }
+    
+    // Delete the file
+    await unlink(filePath);
+    
+    logger.info('[API] Successfully deleted file:', filename);
+    processLogger.info('API', `Deleted ${filename}`);
+    
+    return NextResponse.json({ 
+      success: true, 
+      message: 'File deleted successfully',
+      filename: filename
+    });
+  } catch (error) {
+    logger.error('[API] Error deleting file:', error);
+    processLogger.info('API', 'Failed to delete file');
+    return NextResponse.json({ success: false, error: 'Failed to delete file' }, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
