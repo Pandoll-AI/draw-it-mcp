@@ -1,6 +1,6 @@
 {
   "name": "draw-it-mcp",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "🎨 A beautiful drawing app with Claude Desktop MCP integration. Draw, save, and let AI analyze your artwork!",
   "main": "bin/draw-it-mcp.js",
   "type": "module",

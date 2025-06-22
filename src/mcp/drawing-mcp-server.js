@@ -125,6 +125,15 @@ class DrawingMCPServer {
               properties: {},
               required: [],
             }
+          },
+          {
+            name: 'get_drawing_base64',
+            description: "Retrieve the current drawing as a base64-encoded image. Automatically applies smart cropping to remove whitespace and resizes to 128x128(max) for efficient transfer. Returns the image data as a base64 string suitable for embedding.",
+            inputSchema: {
+              type: 'object',
+              properties: {},
+              required: [],
+            }
           }
         ]
       };
@@ -169,6 +178,9 @@ class DrawingMCPServer {
         switch (name) {
           case 'get_drawing_png':
             response = await this.getDrawingPng();
+            break;
+          case 'get_drawing_base64':
+            response = await this.getDrawingBase64();
             break;
           default:
             throw new Error(`Unknown tool: ${name}`);
@@ -351,19 +363,11 @@ class DrawingMCPServer {
       
       const textContent = {
         type: 'text',
-        text: `Drawing optimized successfully. Original: ${cropResult?.originalSize?.width || 'unknown'}x${cropResult?.originalSize?.height || 'unknown'}, Cropped: ${cropResult?.croppedSize?.width || 'unknown'}x${cropResult?.croppedSize?.height || 'unknown'}, Final: ${targetWidth || 'unknown'}x${targetHeight || 'unknown'}`,
-      };
-      
-      const resourceContent = {
-        type: 'resource',
-        resource_id: `drawing_${Date.now()}`,
-        uri: fileUrl || 'unknown',
-        mimeType: 'image/png',
-        description: `Optimized drawing image (${targetWidth || 'unknown'}x${targetHeight || 'unknown'})`
+        text: `Drawing optimized successfully.\nOriginal: ${cropResult?.originalSize?.width || 'unknown'}x${cropResult?.originalSize?.height || 'unknown'}\nCropped: ${cropResult?.croppedSize?.width || 'unknown'}x${cropResult?.croppedSize?.height || 'unknown'}\nFinal: ${targetWidth || 'unknown'}x${targetHeight || 'unknown'}\nFile URI: ${fileUrl}`,
       };
       
       const finalResponse = {
-        content: [textContent, resourceContent],
+        content: [textContent],
       };
       
       // Validate each content item
@@ -383,6 +387,123 @@ class DrawingMCPServer {
           {
             type: 'text',
             text: `Failed to get optimized drawing data: ${error.message}`,
+          },
+        ],
+      };
+    }
+  }
+
+  async getDrawingBase64() {
+    logger.debug('[MCP] Get drawing base64 called with 64x64 max size');
+    
+    try {
+      const response = await fetch('http://localhost:3001/api/drawing');
+      
+      if (!response.ok) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `No drawing data available. App status: ${response.status}. Start the drawing app: npm run dev`,
+            },
+          ],
+        };
+      }
+      
+      const data = await response.json();
+      
+      if (!data.filePath) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: 'No drawing found. Please create a drawing at http://localhost:3001 first.',
+            },
+          ],
+        };
+      }
+
+      // Get PNG file path
+      const drawingsDir = this.getDrawingsPath();
+      const filename = data.filePath ? path.basename(data.filePath) : 'current-active.png';
+      const imagePath = path.join(drawingsDir, filename);
+      
+      logger.debug(`[MCP] Looking for image file:`, {
+        drawingsDir,
+        filename,
+        imagePath,
+        exists: fs.existsSync(imagePath)
+      });
+      
+      if (!fs.existsSync(imagePath)) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Image file not found: ${imagePath}. Drawings directory: ${drawingsDir}`,
+            },
+          ],
+        };
+      }
+
+      // Smart crop to remove whitespace using Sharp
+      const cropResult = await this.smartCrop(imagePath);
+      
+      // Calculate optimal size while maintaining aspect ratio
+      const { width: croppedWidth, height: croppedHeight } = cropResult.croppedSize;
+      const aspectRatio = croppedWidth / croppedHeight;
+      
+      // Determine target dimensions based on aspect ratio
+      // Keep the longer side at 128px, scale the shorter side proportionally
+      let targetWidth, targetHeight;
+      const maxSize = 128;
+      
+      if (aspectRatio > 1) {
+        // Landscape: width is longer
+        targetWidth = maxSize;
+        targetHeight = Math.round(maxSize / aspectRatio);
+      } else {
+        // Portrait or square: height is longer or equal
+        targetHeight = maxSize;
+        targetWidth = Math.round(maxSize * aspectRatio);
+      }
+      
+      // Resize and convert to base64
+      const base64Buffer = await cropResult.image
+        .resize(targetWidth, targetHeight, { 
+          fit: 'fill', // Exact dimensions, no padding
+          withoutEnlargement: false 
+        })
+        .png()
+        .toBuffer();
+      
+      const base64String = base64Buffer.toString('base64');
+      
+      // Debug logging
+      logger.debug('[MCP] Base64 response data:', {
+        originalSize: cropResult.originalSize,
+        croppedSize: cropResult.croppedSize,
+        targetWidth,
+        targetHeight,
+        base64Length: base64String.length
+      });
+      
+      // Return in the same format as the image server example
+      return {
+        content: [
+          {
+            type: 'image',
+            data: base64String,
+            mimeType: 'image/png',
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Failed to get drawing as base64: ${error.message}`,
           },
         ],
       };

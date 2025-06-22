@@ -24,7 +24,7 @@ Create amazing artwork with an intuitive interface, save your drawings, and get 
 npx draw-it-mcp
 ```
 
-Perfect for quick sketches and trying out the app!
+Perfect for quick sketches and trying out the app, but might not work with MCP that means USELESS!
 
 ### 🤖 Want AI Integration? (Permanent Installation)
 **For Claude Code/Cursor/Claude Desktop integration:**
