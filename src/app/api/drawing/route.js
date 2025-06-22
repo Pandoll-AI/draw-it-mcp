@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir, rename, unlink, stat } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
-import logger, { processLogger } from '../../../utils/logger';
+import logger, { processLogger } from '../../../utils/logger.js';
 
 // Create drawings directory if it doesn't exist
 const DRAWINGS_DIR = path.join(process.cwd(), 'public', 'drawings');
@@ -57,12 +57,12 @@ export async function GET() {
 
 
 // Helper function to convert dataURL to PNG buffer
-function dataURLToPNG(dataURL: string): Buffer {
+function dataURLToPNG(dataURL) {
   const base64Data = dataURL.replace(/^data:image\/[a-z]+;base64,/, '');
   return Buffer.from(base64Data, 'base64');
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request) {
   try {
     const { searchParams } = new URL(request.url);
     const filename = searchParams.get('filename');
@@ -109,7 +109,7 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request) {
   try {
     const data = await request.json();
     const filename = data.filename || 'current-active.png';

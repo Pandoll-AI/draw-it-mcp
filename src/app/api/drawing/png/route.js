@@ -6,7 +6,7 @@ import path from 'path';
 const DRAWINGS_DIR = path.join(process.cwd(), 'public', 'drawings');
 
 // Get current drawing as PNG file
-export async function GET(request: NextRequest) {
+export async function GET(request) {
   try {
     console.log('[PNG API] PNG file request received');
     
