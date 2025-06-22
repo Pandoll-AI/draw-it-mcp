@@ -46,6 +46,7 @@ tmp/
 temp/
 *.tmp
 *.temp
+public/
 
 # OS files
 Thumbs.db

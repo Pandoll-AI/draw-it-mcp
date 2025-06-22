@@ -57,12 +57,93 @@ function isFirstRun() {
   return false;
 }
 
+// Handle update command
+if (process.argv.includes('update')) {
+  console.log('🔄 Updating Draw-it-MCP...\n');
+  
+  const updateProcess = spawn('npm', ['update', '-g', 'draw-it-mcp'], {
+    stdio: 'inherit',
+    shell: true
+  });
+  
+  updateProcess.on('close', (code) => {
+    if (code === 0) {
+      console.log('\n✅ Update completed successfully!');
+      console.log('🎉 Draw-it-MCP is now up to date.');
+    } else {
+      console.log('\n❌ Update failed. Trying alternative method...');
+      console.log('🔄 Running: npm install -g draw-it-mcp@latest\n');
+      
+      const installProcess = spawn('npm', ['install', '-g', 'draw-it-mcp@latest'], {
+        stdio: 'inherit', 
+        shell: true
+      });
+      
+      installProcess.on('close', (installCode) => {
+        if (installCode === 0) {
+          console.log('\n✅ Installation completed successfully!');
+          console.log('🎉 Draw-it-MCP has been updated to the latest version.');
+        } else {
+          console.log('\n❌ Automatic update failed. Please run manually:');
+          console.log('   npm install -g draw-it-mcp@latest');
+        }
+        process.exit(installCode);
+      });
+    }
+  });
+  
+  return; // Don't proceed to main()
+}
+
 // Handle MCP server execution
 if (process.argv.includes('mcp:server')) {
   // When called as "draw-it-mcp mcp:server", run the MCP server directly
   const mcpPath = path.resolve(__dirname, '..', 'src', 'mcp', 'drawing-mcp-server.js');
   spawn('node', [mcpPath], { stdio: 'inherit' });
   process.exit(0);
+}
+
+// Show MCP configuration for Cursor & Claude Code
+function showMCPConfiguration() {
+  console.log('\n📋 MCP Configuration for Cursor & Claude Code');
+  console.log('='.repeat(50));
+  console.log('Copy and paste one of these configurations:\n');
+  
+  // Get installation paths
+  const globalNodeModulesPath = path.dirname(path.dirname(__dirname));
+  const mcpServerPath = path.join(projectRoot, 'src', 'mcp', 'drawing-mcp-server.js');
+  
+  console.log('🔧 Option 1: Using NPX (Recommended)');
+  console.log('```json');
+  console.log(JSON.stringify({
+    mcpServers: {
+      "draw-it-mcp": {
+        command: "npx",
+        args: ["-y", "draw-it-mcp", "mcp:server"]
+      }
+    }
+  }, null, 2));
+  console.log('```\n');
+  
+  console.log('🔧 Option 2: Using absolute path');
+  console.log('```json');
+  console.log(JSON.stringify({
+    mcpServers: {
+      "draw-it-mcp": {
+        command: "node",
+        args: [mcpServerPath]
+      }
+    }
+  }, null, 2));
+  console.log('```\n');
+  
+  console.log('💡 Setup Instructions:');
+  console.log('1. Copy one of the JSON configurations above');
+  console.log('2. In Cursor: Open Settings → Extensions → MCP Settings');
+  console.log('3. In Claude Code: Use command palette → "Claude Code: Edit MCP Settings"');
+  console.log('4. Paste the configuration into your MCP settings');
+  console.log('5. Restart Cursor/Claude Code');
+  console.log('6. Start drawing and use MCP tools to analyze your artwork!\n');
 }
 
 // Main function
@@ -141,12 +222,15 @@ async function main() {
       console.log('  • Save your drawings for later');
       console.log('  • Toggle dark/light theme');
       console.log('');
-      console.log('🤖 Claude Desktop Integration:');
+      console.log('🤖 Cursor & Claude Code Integration:');
       console.log('  • MCP server available for AI analysis');
-      console.log('  • Check README for setup instructions');
+      console.log('  • See MCP configuration below');
       console.log('');
       console.log('⏹️  Press Ctrl+C to stop');
       console.log('='.repeat(60) + '\n');
+      
+      // Show MCP configuration for Cursor & Claude Code
+      showMCPConfiguration();
       
       // Open browser if first run
       if (isFirstRun()) {

@@ -2,7 +2,7 @@
 
 **A beautiful, AI-powered drawing application that runs in your browser!**
 
-Create amazing artwork with an intuitive interface, save your drawings, and get AI-powered insights through Claude Desktop integration.
+Create amazing artwork with an intuitive interface, save your drawings, and get AI-powered insights through Cursor and Claude Code integration.
 
 ![Draw-it-MCP Preview](https://img.shields.io/badge/Status-Ready%20to%20Draw-brightgreen?style=for-the-badge&logo=palette)
 
@@ -27,7 +27,7 @@ npx draw-it-mcp
 Perfect for quick sketches and trying out the app, but might not work with MCP that means USELESS!
 
 ### 🤖 Want AI Integration? (Permanent Installation)
-**For Claude Code/Cursor/Claude Desktop integration:**
+**For Claude Code/Cursor integration:**
 
 ```bash
 npm install -g draw-it-mcp
@@ -75,7 +75,7 @@ This installs permanently and enables stable MCP connections.
 
 ## 🤖 AI-Powered Art Analysis (Optional)
 
-Connect with Claude Desktop to unlock AI superpowers:
+Connect with Cursor or Claude Code to unlock AI superpowers:
 
 ### What Claude Can Do With Your Art:
 - 🔍 **Analyze composition** and artistic techniques
@@ -122,20 +122,6 @@ Connect with Claude Desktop to unlock AI superpowers:
    ```
 5. **Restart Cursor** and ask Claude about your drawings!
 
-#### 🖥️ Claude Desktop (Alternative)
-1. **Install Draw-it-MCP globally**: `npm install -g draw-it-mcp`
-2. **Add to Claude Desktop config** at `~/Library/Application Support/Claude/claude_desktop_config.json`:
-   ```json
-   {
-     "mcpServers": {
-       "draw-it-mcp": {
-         "command": "draw-it-mcp",
-         "args": ["mcp:server"] 
-       }
-     }
-   }
-   ```
-3. **Restart Claude Desktop** and try asking about your drawings!
 
 ## 📱 How to Use
 
@@ -153,6 +139,20 @@ Connect with Claude Desktop to unlock AI superpowers:
 - **Save early, save often** - your drawings are precious!
 - **Try different brush sizes** for varied artistic effects
 - **Use the eraser** to perfect your details
+
+## 🔄 Updating Draw-it-MCP
+
+**Keep your installation up to date with the latest features:**
+
+```bash
+# Easy update command
+draw-it-mcp update
+```
+
+If the update fails, you can manually update:
+```bash
+npm install -g draw-it-mcp@latest
+```
 
 ## 🛠️ System Requirements
 
@@ -229,5 +229,5 @@ draw-it-mcp
   <strong>Made with ❤️ for creators everywhere</strong><br>
   <a href="https://github.com/draw-it-mcp/draw-it-mcp">⭐ Star on GitHub</a> •
   <a href="https://github.com/draw-it-mcp/draw-it-mcp/issues">🐛 Report Issues</a> •
-  <a href="#-ai-powered-art-analysis-optional">🤖 Claude Setup</a>
+  <a href="#-ai-powered-art-analysis-optional">🤖 AI Setup</a>
 </p>
