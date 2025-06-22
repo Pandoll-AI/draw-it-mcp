@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFile } from 'fs/promises';
+import { readFile, stat } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
 
@@ -10,54 +10,25 @@ export async function GET(request: NextRequest) {
   try {
     console.log('[PNG API] PNG file request received');
     
-    // First get current drawing info from the main API
-    const baseUrl = request.nextUrl.origin;
-    console.log('[PNG API] Fetching drawing info from:', `${baseUrl}/api/drawing`);
+    // Get current drawing info directly from file system instead of internal API call
+    const currentActiveFile = path.join(DRAWINGS_DIR, 'current-active.png');
     
-    const response = await fetch(`${baseUrl}/api/drawing`);
+    console.log('[PNG API] Looking for current active drawing at:', currentActiveFile);
     
-    if (!response.ok) {
-      console.error('[PNG API] Failed to get drawing info:', response.status);
+    // Check if current active file exists
+    if (!existsSync(currentActiveFile)) {
+      console.error('[PNG API] Current active PNG file not found:', currentActiveFile);
       return NextResponse.json({ success: false, error: 'No current drawing found' }, { status: 404 });
     }
     
-    const drawingInfo = await response.json();
-    console.log('[PNG API] Retrieved drawing info:', {
-      hasDataURL: !!drawingInfo.dataURL,
-      dataURLLength: drawingInfo.dataURL ? drawingInfo.dataURL.length : 0,
-      filePath: drawingInfo.filePath,
-      timestamp: drawingInfo.timestamp
-    });
-    
-    if (!drawingInfo.filePath) {
-      console.error('[PNG API] No filePath in drawing info');
-      return NextResponse.json({ success: false, error: 'Drawing has no saved PNG file' }, { status: 404 });
-    }
-    
-    // Construct full file path
-    const filename = path.basename(drawingInfo.filePath);
-    const fullPath = path.join(DRAWINGS_DIR, filename);
-    
-    console.log('[PNG API] Looking for file:', {
-      filePath: drawingInfo.filePath,
-      filename: filename,
-      fullPath: fullPath,
-      drawingsDir: DRAWINGS_DIR
-    });
-    
-    // Check if file exists
-    if (!existsSync(fullPath)) {
-      console.error('[PNG API] PNG file not found on disk:', fullPath);
-      return NextResponse.json({ success: false, error: 'PNG file not found on disk' }, { status: 404 });
-    }
-    
     // Read and return PNG file
-    const pngBuffer = await readFile(fullPath);
+    const pngBuffer = await readFile(currentActiveFile);
+    const stats = await stat(currentActiveFile);
     
     console.log('[PNG API] Successfully read PNG file:', {
-      filePath: fullPath,
+      filePath: currentActiveFile,
       fileSize: pngBuffer.length,
-      timestamp: drawingInfo.timestamp
+      timestamp: stats.mtime.getTime()
     });
     
     return new Response(pngBuffer, {
@@ -65,8 +36,8 @@ export async function GET(request: NextRequest) {
         'Content-Type': 'image/png',
         'Content-Length': pngBuffer.length.toString(),
         'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'X-Drawing-Timestamp': drawingInfo.timestamp.toString(),
-        'X-Drawing-Dimensions': `${drawingInfo.width}x${drawingInfo.height}`
+        'X-Drawing-Timestamp': stats.mtime.getTime().toString(),
+        'X-Drawing-Dimensions': '800x600'
       }
     });
     

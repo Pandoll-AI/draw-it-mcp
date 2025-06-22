@@ -1227,7 +1227,7 @@ export function DrawingApp() {
                     <div className={`w-2 h-2 rounded-full ${
                       isServerConnected ? 'bg-green-400' : 'bg-red-400'
                     }`}></div>
-                    <span className="text-xs">
+                    <span className="text-xs px-1">
                       {isServerConnected ? 'Connected' : 'Disconnected'}
                     </span>
                   </div>
@@ -1422,7 +1422,7 @@ export function DrawingApp() {
                   )}
                 </div>
               </div>
-              <div className="text-xs opacity-70 hidden md:block">
+              <div className="text-xs opacity-70 hidden md:block px-1">
                 ⌘Z: Undo • ⌘Y: Redo • ⌘N: New • ⌘S: Export
               </div>
               {/* Mobile: Theme toggle and menu */}

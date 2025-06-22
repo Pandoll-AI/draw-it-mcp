@@ -10,16 +10,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
 
+// Read version from package.json
+const packageJsonPath = path.join(projectRoot, 'package.json');
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+const version = packageJson.version;
+
 // ASCII Art Banner
 const banner = `
 ╭─────────────────────────────────────────────────────────────╮
-│  🎨 Draw-it-MCP - AI-Powered Drawing Application            │
-│                                                             │
-│  ✨ Features:                                               │
-│  • Beautiful canvas drawing interface                      │
-│  • Save & load your artwork                               │
-│  • Claude Desktop MCP integration                         │
-│  • Dark/Light theme support                               │
+│  Draw-it-MCP - MCP-Powered Drawing Assistant for AI Coding  │
+│                                      v${version.padEnd(6)}                │
+│  Features:                                                  │
+│  • Beautiful canvas drawing interface                       │ 
+│  • Save & load your artwork                                 │
+│  • Cursor & Claude Code MCP integration                     │
+│  • Dark/Light theme support                                 │
 │                                                             │
 ╰─────────────────────────────────────────────────────────────╯
 `;
