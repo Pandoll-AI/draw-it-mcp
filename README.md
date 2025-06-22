@@ -17,13 +17,24 @@ Create amazing artwork with an intuitive interface, save your drawings, and get 
 
 ## 🚀 Quick Start
 
-**Just one command to start drawing:**
+### 🎨 Just Want to Draw? (Temporary Use)
+**One command to start drawing immediately:**
 
 ```bash
 npx draw-it-mcp
 ```
 
-That's it! Your drawing app will open in your browser automatically.
+Perfect for quick sketches and trying out the app!
+
+### 🤖 Want AI Integration? (Permanent Installation)
+**For Claude Code/Cursor/Claude Desktop integration:**
+
+```bash
+npm install -g draw-it-mcp
+draw-it-mcp
+```
+
+This installs permanently and enables stable MCP connections.
 
 ### What happens when you run it:
 1. 📦 Installs dependencies (first time only)
@@ -75,55 +86,61 @@ Connect with Claude Desktop to unlock AI superpowers:
 
 ### Quick Setup for AI Code Editors:
 
+> **⚠️ Important**: For stable MCP connections, install globally first: `npm install -g draw-it-mcp`
+
 #### 🤖 Claude Code (Recommended)
-1. **Install Claude Code**: [Download from Anthropic](https://claude.ai/code)
-2. **Start Draw-it-MCP**: `npx draw-it-mcp` 
-3. **Add MCP configuration** to your Claude Code settings:
+1. **Install Draw-it-MCP globally**: `npm install -g draw-it-mcp`
+2. **Install Claude Code**: [Download from Anthropic](https://claude.ai/code)
+3. **Start Draw-it-MCP**: `draw-it-mcp` 
+4. **Add MCP configuration** to your Claude Code settings:
    ```json
    {
      "mcpServers": {
        "draw-it-mcp": {
-         "command": "npx",
-         "args": ["draw-it-mcp", "mcp:server"]
+         "command": "draw-it-mcp",
+         "args": ["mcp:server"]
        }
      }
    }
    ```
-4. **Restart Claude Code** and try: *"Can you analyze my current drawing?"*
+5. **Restart Claude Code** and try: *"Can you analyze my current drawing?"*
 
 #### ⚡ Cursor IDE  
-1. **Install Cursor**: [Download from cursor.sh](https://cursor.sh/)
-2. **Start Draw-it-MCP**: `npx draw-it-mcp`
-3. **Configure MCP** in Cursor settings (`~/.cursor/claude_desktop_config.json`):
+1. **Install Draw-it-MCP globally**: `npm install -g draw-it-mcp`
+2. **Install Cursor**: [Download from cursor.sh](https://cursor.sh/)
+3. **Start Draw-it-MCP**: `draw-it-mcp`
+4. **Configure MCP** in Cursor settings (`~/.cursor/claude_desktop_config.json`):
    ```json
    {
      "mcpServers": {
        "draw-it-mcp": {
-         "command": "npx", 
-         "args": ["draw-it-mcp", "mcp:server"]
+         "command": "draw-it-mcp", 
+         "args": ["mcp:server"]
        }
      }
    }
    ```
-4. **Restart Cursor** and ask Claude about your drawings!
+5. **Restart Cursor** and ask Claude about your drawings!
 
 #### 🖥️ Claude Desktop (Alternative)
-For Claude Desktop users, add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
-```json
-{
-  "mcpServers": {
-    "draw-it-mcp": {
-      "command": "npx",
-      "args": ["draw-it-mcp", "mcp:server"] 
-    }
-  }
-}
-```
+1. **Install Draw-it-MCP globally**: `npm install -g draw-it-mcp`
+2. **Add to Claude Desktop config** at `~/Library/Application Support/Claude/claude_desktop_config.json`:
+   ```json
+   {
+     "mcpServers": {
+       "draw-it-mcp": {
+         "command": "draw-it-mcp",
+         "args": ["mcp:server"] 
+       }
+     }
+   }
+   ```
+3. **Restart Claude Desktop** and try asking about your drawings!
 
 ## 📱 How to Use
 
 ### Getting Started (30 seconds!)
-1. Run `npx draw-it-mcp` in your terminal
+1. Run `npx draw-it-mcp` (temporary) or `draw-it-mcp` (if globally installed)
 2. Browser opens automatically to the drawing app
 3. Click a color to select it
 4. Choose your brush size
@@ -149,13 +166,13 @@ For Claude Desktop users, add to `~/Library/Application Support/Claude/claude_de
 Share the magic! Anyone can start their own drawing session:
 
 ```bash
-# Team member 1
+# Team member 1 (temporary use)
 npx draw-it-mcp
 
-# Team member 2 (different port automatically chosen)
-npx draw-it-mcp
+# Team member 2 (if globally installed)
+draw-it-mcp
 
-# Everyone gets their own drawing space!
+# Different ports automatically chosen - everyone gets their own space!
 ```
 
 ## 🆘 Need Help?
@@ -196,7 +213,12 @@ Open an issue on [GitHub](https://github.com/draw-it-mcp/draw-it-mcp/issues) - w
 Don't wait - start your artistic journey now:
 
 ```bash
+# Quick try (temporary)
 npx draw-it-mcp
+
+# Full experience with AI (permanent)
+npm install -g draw-it-mcp
+draw-it-mcp
 ```
 
 **Happy drawing! 🎨✨**

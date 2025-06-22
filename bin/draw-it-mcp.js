@@ -52,6 +52,14 @@ function isFirstRun() {
   return false;
 }
 
+// Handle MCP server execution
+if (process.argv.includes('mcp:server')) {
+  // When called as "draw-it-mcp mcp:server", run the MCP server directly
+  const mcpPath = path.resolve(__dirname, '..', 'src', 'mcp', 'drawing-mcp-server.js');
+  spawn('node', [mcpPath], { stdio: 'inherit' });
+  return;
+}
+
 // Main function
 async function main() {
   try {
