@@ -92,7 +92,7 @@ if (process.argv.includes('update')) {
     }
   });
   
-  return; // Don't proceed to main()
+  process.exit(0); // Don't proceed to main()
 }
 
 // Handle MCP server execution
