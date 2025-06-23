@@ -13,6 +13,7 @@ out/
 # production
 build/
 dist/
+.next_version
 
 # misc
 .DS_Store
@@ -53,6 +54,7 @@ Thumbs.db
 .claude/
 dist/
 .first-run
+CLAUDE.md
 
 # Temporary files
 tmp/

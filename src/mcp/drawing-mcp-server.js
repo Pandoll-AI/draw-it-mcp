@@ -117,9 +117,9 @@ class DrawingMCPServer {
       
       const response = {
         tools: [
-          {
+          {    
             name: 'get_drawing_png',
-            description: "Retrieve and analyze the current drawing image. Automatically applies smart cropping to remove whitespace and resizes to 640x640(max) for efficient analysis. Use this tool when users want to: examine drawing content, recreate drawings in HTML/CSS, analyze visual elements, convert drawings to code, or get detailed information about shapes, lines, and text in the image.",
+            description: "Retrieve and analyze the current drawing image. Automatically applies smart cropping to remove whitespace and resizes to 640x640(max) for efficient analysis. Use this tool when users want you to see their drawings to: examine drawing content, recreate drawings in HTML/CSS, analyze visual elements, convert drawings to code, or get detailed information about shapes, lines, and text in the image. When users request web design analysis, examine element sizes, positions, functionality, and interactions to ensure they align well with overall layout and UX intent. For diagrams (such as Mermaid charts), focus on the structure of boxes, arrows, and logical groupings to understand relationships before interpretation. For character or object designs, analyse posture, shape, and colour to capture style and identify key features needed for accurate recreation. Beyond basic drawing recognition, also extract layout components like divs and buttons for HTML/CSS conversion by analysing visual grouping and sizing. When analysing UI mockups, evaluate design consistency and interaction flow. For structural diagrams, identify nodes and connections to reconstruct logical structure. For characters or objects, assess visual balance and stylistic intent to suggest faithful or improved renditions. Note: This tool provides larger images and faster performance compared to 'get_drawing_base64', so it's recommended as the primary choice. However, access to saved PNG files may be blocked depending on system settings, in which case 'get_drawing_base64' is recommended as an alternative.",
             inputSchema: {
               type: 'object',
               properties: {},
@@ -128,7 +128,7 @@ class DrawingMCPServer {
           },
           {
             name: 'get_drawing_base64',
-            description: "Retrieve the current drawing as a base64-encoded image. Automatically applies smart cropping to remove whitespace and resizes to 128x128(max) for efficient transfer. Returns the image data as a base64 string suitable for embedding.",
+            description: "Retrieve the current drawing as a base64-encoded image. Automatically applies smart cropping to remove whitespace and resizes to 128x128(max) for efficient transfer. Returns the image data as a base64 string suitable for embedding. Note: This tool has lower resolution and slower performance compared to 'get_drawing_png'. It is recommended to use this tool only as a fallback when 'get_drawing_png' fails.",
             inputSchema: {
               type: 'object',
               properties: {},

@@ -55,3 +55,7 @@ Thumbs.db
 
 # First run flag (regenerate for each install)
 .first-run
+
+# Development tracking files
+.next_version
+CLAUDE.md
